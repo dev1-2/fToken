@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite Schatztruhe – 1:137.500 Token Simulator</title>
+    <!-- Tailwind CSS für modernes, responsives Layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js für dynamische Web-Audio Soundeffekte ohne externe Dateien -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- Google Fonts für markante Gaming-Typografie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Benutzerdefinierte Gaming-Styles & Keyframe-Animationen */
+        :root {
+            --fn-gold: #ffd700;
+            --fn-gold-dark: #d97706;
+            --fn-cyan: #00f0ff;
+            --fn-purple: #a855f7;
+            --fn-bg-dark: #090d1e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 50% 15%, #1e1b4b 0%, #0f172a 45%, #060913 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        .font-gaming {
+            font-family: 'Chakra Petch', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        /* Schwebende Truhen-Animation */
+        @keyframes floatChest {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(0.6deg); }
+        }
+
+        .chest-float {
+            animation: floatChest 3.2s ease-in-out infinite;
+        }
+
+        /* Wackeln beim Öffnen */
+        @keyframes shakeChest {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.07) rotate(-4deg); }
+            40% { transform: scale(1.1) rotate(4deg); }
+            60% { transform: scale(1.08) rotate(-3deg); }
+            80% { transform: scale(1.04) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .chest-shake {
+            animation: shakeChest 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        /* Pulsierender goldener Schein hinter der Truhe */
+        @keyframes auraPulse {
+            0%, 100% { opacity: 0.55; transform: scale(0.95); }
+            50% { opacity: 0.95; transform: scale(1.08); }
+        }
+
+        .chest-aura {
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.55) 0%, rgba(245, 158, 11, 0.2) 45%, rgba(0, 240, 255, 0) 72%);
+            animation: auraPulse 2.8s ease-in-out infinite;
+        }
+
+        /* Lichtstrahl-Explosion beim Öffnen */
+        @keyframes beamFlash {
+            0% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+            30% { opacity: 1; transform: scale(1.25) rotate(15deg); }
+            100% { opacity: 0; transform: scale(1.6) rotate(30deg); }
+        }
+
+        .light-beam-active {
+            animation: beamFlash 0.65s ease-out forwards;
+        }
+
+        /* Glühender Riss in der Truhe */
+        @keyframes crackGlow {
+            0%, 100% { filter: drop-shadow(0 0 6px #fef08a) drop-shadow(0 0 14px #f59e0b); }
+            50% { filter: drop-shadow(0 0 12px #ffffff) drop-shadow(0 0 24px #fbbf24); }
+        }
+
+        .chest-crack {
+            animation: crackGlow 1.8s infinite alternate;
+        }
+
+        /* Fortnite-typische abgeschrägte Gaming-Buttons */
+        .fn-btn {
+            position: relative;
+            transition: all 0.15s ease;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .fn-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .fn-btn:active:not(:disabled) {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .fn-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Glas-Karten für Statistiken */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Mythischer Jackpot-Banner Animation */
+        @keyframes mythicShine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .mythic-gradient {
+            background: linear-gradient(90deg, #b45309, #fbbf24, #fef08a, #fbbf24, #b45309);
+            background-size: 200% auto;
+            animation: mythicShine 2.5s linear infinite;
+        }
+
+        /* Custom Scrollbar für Loot-Verlauf */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.4);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.7);
+        }
+    </style>
+</head>
+<body class="flex flex-col justify-between p-3 sm:p-6">
+
+    <!-- Partikel-Canvas im Vordergrund für Funken & Konfetti -->
+    <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-40"></canvas>
+
+    <!-- Header-Bereich -->
+    <header class="max-w-6xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-cyan-500/20">
+        <div class="flex items-center gap-3 text-center sm:text-left">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30 border border-yellow-200/40">
+                <svg class="w-7 h-7 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 4h14a2 2 0 0 1 2 2v4H3V6a2 2 0 0 1 2-2zm-2 8h7v2h4v-2h7v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="flex items-center justify-center sm:justify-start gap-2">
+                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">RNG Simulation</span>
+                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">1 : 137.500</span>
+                </div>
+                <h1 class="font-gaming text-2xl sm:text-3xl font-bold uppercase tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-cyan-300">
+                    Fortnite Schatztruhen-Simulator
+                </h1>
+            </div>
+        </div>
+
+        <!-- Sound Toggle & HTML Download Button -->
+        <div class="flex items-center gap-2.5">
+            <button id="soundToggleBtn" onclick="toggleSound()" class="px-3.5 py-2.5 rounded-xl glass-card hover:border-cyan-400/60 text-slate-200 text-sm font-semibold flex items-center gap-2 transition cursor-pointer" title="Soundeffekte ein/ausschalten">
+                <span id="soundIcon">🔊</span>
+                <span class="hidden md:inline" id="soundLabel">Sound: An</span>
+            </button>
+
+            <button onclick="downloadStandaloneHTML()" class="fn-btn px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-gaming font-bold text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/25 flex items-center gap-2 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/>
+                </svg>
+                <span>HTML herunterladen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hauptbereich: Truhe links/mitte & Dashboard rechts -->
+    <main class="max-w-6xl w-full mx-auto my-auto py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Linke/Zentrale Spalte: Interaktive Fortnite Schatztruhe & Steuerungs-Buttons -->
+        <section class="lg:col-span-7 glass-card rounded-2xl p-5 sm:p-8 flex flex-col items-center justify-between relative overflow-hidden">
+            
+            <!-- Subtiles Hintergrund-Raster -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#38bdf8 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+            <!-- Info-Pill oben -->
+            <div class="w-full flex flex-wrap items-center justify-between gap-2 z-10 mb-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    Ziel-Item: <strong class="text-amber-300">Mythischer Sieges-Token</strong>
+                </span>
+                <span id="autoStatusBadge" class="hidden px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-600/30 text-purple-200 border border-purple-400/50 animate-pulse">
+                    ⚡ Auto-Open aktiv...
+                </span>
+            </div>
+
+            <!-- Interaktiver Truhen-Container (Klickbar!) -->
+            <div class="relative my-4 sm:my-6 flex flex-col items-center justify-center w-full">
+                <!-- Pulsierende goldene Aura -->
+                <div id="chestAura" class="absolute w-64 h-64 sm:w-80 sm:h-80 rounded-full chest-aura pointer-events-none"></div>
+                
+                <!-- Lichtstrahl-Effekt bei Klick -->
+                <div id="lightBeam" class="absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full opacity-0 pointer-events-none" style="background: conic-gradient(from 0deg, transparent 0deg, rgba(255,235,130,0.8) 20deg, transparent 40deg, rgba(0,240,255,0.6) 110deg, transparent 140deg, rgba(255,215,0,0.85) 220deg, transparent 250deg, rgba(255,255,255,0.8) 320deg, transparent 360deg);"></div>
+
+                <!-- Klickbarer Truhen-Button -->
+                <button id="chestButton" onclick="handleSingleOpen()" aria-label="Schatztruhe öffnen" class="relative z-10 group focus:outline-none cursor-pointer p-4 rounded-3xl transition-transform duration-200 hover:scale-105 active:scale-95">
+                    <div id="chestVisualWrapper" class="chest-float">
+                        <!-- Detaillierte SVG-Schatztruhe im Fortnite-Stil -->
+                        <svg class="w-56 h-48 sm:w-72 sm:h-60 drop-shadow-[0_18px_28px_rgba(0,0,0,0.85)]" viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <!-- Gold-Verläufe für Metallbeschläge -->
+                                <linearGradient id="goldMetal" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#FEF08A"/>
+                                    <stop offset="35%" stop-color="#F59E0B"/>
+                                    <stop offset="75%" stop-color="#B45309"/>
+                                    <stop offset="100%" stop-color="#FDE047"/>
+                                </linearGradient>
+                                <!-- Holz-Verlauf für Truhenkörper -->
+                                <linearGradient id="woodBody" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#78350F"/>
+                                    <stop offset="50%" stop-color="#451A03"/>
+                                    <stop offset="100%" stop-color="#270E02"/>
+                                </linearGradient>
+                                <!-- Deckel-Holz -->
+                                <linearGradient id="woodLid" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#92400E"/>
+                                    <stop offset="100%" stop-color="#5C2606"/>
+                                </linearGradient>
+                                <!-- Glühender Riss-Verlauf -->
+                                <linearGradient id="crackEnergy" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="#F59E0B"/>
+                                    <stop offset="25%" stop-color="#FEF9C3"/>
+                                    <stop offset="50%" stop-color="#FFFFFF"/>
+                                    <stop offset="75%" stop-color="#FEF9C3"/>
+                                    <stop offset="100%" stop-color="#F59E0B"/>
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Bodenschatten -->
+                            <ellipse cx="160" cy="236" rx="115" ry="14" fill="rgba(0,0,0,0.55)"/>
+
+                            <!-- Unterer Truhenkorpus -->
+                            <path d="M46 122 L274 122 L262 222 C261 228 256 232 250 232 L70 232 C64 232 59 228 58 222 L46 122 Z" fill="url(#woodBody)" stroke="url(#goldMetal)" stroke-width="6"/>
+                            
+                            <!-- Holzplanken-Linien unten -->
+                            <line x1="52" y1="158" x2="268" y2="158" stroke="#1E0A01" stroke-width="3"/>
+                            <line x1="56" y1="194" x2="264" y2="194" stroke="#1E0A01" stroke-width="3"/>
+
+                            <!-- Vertikale goldene Eck- & Mittelbänder unten -->
+                            <path d="M46 122 L66 122 L76 232 L58 232 Z" fill="url(#goldMetal)"/>
+                            <path d="M274 122 L254 122 L244 232 L262 232 Z" fill="url(#goldMetal)"/>
+                            <rect x="148" y="122" width="24" height="110" fill="url(#goldMetal)" opacity="0.85"/>
+
+                            <!-- Truhendeckel (leicht angehoben durch leuchtende Energie!) -->
+                            <g id="chestLidGroup" class="transition-transform duration-150">
+                                <path d="M38 112 L54 52 C57 42 66 36 76 36 L244 36 C254 36 263 42 266 52 L282 112 Z" fill="url(#woodLid)" stroke="url(#goldMetal)" stroke-width="6"/>
+                                <!-- Deckel-Planke -->
+                                <line x1="46" y1="76" x2="274" y2="76" stroke="#290F02" stroke-width="3"/>
+                                <!-- Goldbänder auf dem Deckel -->
+                                <path d="M38 112 L54 52 L74 52 L60 112 Z" fill="url(#goldMetal)"/>
+                                <path d="M282 112 L266 52 L246 52 L260 112 Z" fill="url(#goldMetal)"/>
+                                <rect x="148" y="36" width="24" height="76" fill="url(#goldMetal)"/>
+                                <!-- Nieten auf dem Deckel -->
+                                <circle cx="57" cy="68" r="3.5" fill="#78350F"/>
+                                <circle cx="263" cy="68" r="3.5" fill="#78350F"/>
+                                <circle cx="160" cy="54" r="3.5" fill="#78350F"/>
+                            </g>
+
+                            <!-- Glühender Fortnite-Energiespalt / Riss zwischen Deckel und Korpus -->
+                            <g class="chest-crack">
+                                <rect x="42" y="111" width="236" height="12" rx="6" fill="url(#crackEnergy)"/>
+                                <!-- Energiezacken / Risse -->
+                                <polygon points="95,111 104,98 112,111" fill="#FEF9C3"/>
+                                <polygon points="205,111 214,96 222,111" fill="#FEF9C3"/>
+                                <polygon points="120,123 128,134 135,123" fill="#FEF08A"/>
+                            </g>
+
+                            <!-- Zentrales Fortnite-Schloss-Emblem -->
+                            <g transform="translate(160, 122)">
+                                <polygon points="-24,-18 24,-18 30,0 24,22 -24,22 -30,0" fill="url(#goldMetal)" stroke="#78350F" stroke-width="3"/>
+                                <circle cx="0" cy="-2" r="7" fill="#1E1B4B"/>
+                                <polygon points="-4,2 4,2 6,14 -6,14" fill="#1E1B4B"/>
+                                <!-- Leuchtender Kern im Schlüsselloch -->
+                                <circle cx="0" cy="-2" r="3" fill="#00F0FF"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <span class="mt-1 inline-block text-xs font-bold uppercase tracking-widest text-amber-300/90 group-hover:text-yellow-200 transition">
+                        👆 Klick auf die Truhe oder den Button
+                    </span>
+                </button>
+            </div>
+
+            <!-- Aktuelles Ziehungsergebnis (Feedback-Box) -->
+            <div id="lastResultBanner" class="w-full mb-5 p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-between gap-3 transition-all duration-200">
+                <div class="flex items-center gap-3">
+                    <div id="lastResultIcon" class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-xl shrink-0">
+                        📦
+                    </div>
+                    <div>
+                        <div id="lastResultRarity" class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Bereit zum Öffnen</div>
+                        <div id="lastResultTitle" class="font-gaming text-base sm:text-lg font-bold text-slate-100">Drücke auf die Schatztruhe!</div>
+                    </div>
+                </div>
+                <div id="lastResultBadge" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                    Zug #0
+                </div>
+            </div>
+
+            <!-- Haupt-Aktionsbuttons -->
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 z-10">
+                <!-- Primärer "Truhe öffnen" Button -->
+                <button id="openOnceBtn" onclick="handleSingleOpen()" class="sm:col-span-2 fn-btn py-4 px-6 bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-gaming text-xl sm:text-2xl font-bold uppercase tracking-wider shadow-xl shadow-amber-500/30 flex items-center justify-center gap-3 cursor-pointer">
+                    <span>⚡ Truhe öffnen (1x)</span>
+                </button>
+
+                <!-- 100x Öffnen -->
+                <button id="open100Btn" onclick="handleBulkOpen(100)" class="fn-btn py-3 px-4 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-gaming text-base font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                    <span>⏩ 100x öffnen</span>
+                </button>
+
+                <!-- 1.000x Öffnen -->
+                <button id="open1000Btn" onclick="handleBulkOpen(1000)" class="fn-btn py-3 px-4 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-gaming text-base font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                    <span>🚀 1.000x öffnen</span>
+                </button>
+
+                <!-- Auto-Open Toggle -->
+                <button id="autoOpenBtn" onclick="toggleAutoOpen()" class="fn-btn py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-gaming text-base font-bold uppercase tracking-wider shadow-lg shadow-purple-600/25 flex items-center justify-center gap-2 cursor-pointer">
+                    <span id="autoOpenBtnIcon">🔄</span>
+                    <span id="autoOpenBtnText">Auto-Open bis Token</span>
+                </button>
+
+                <!-- Reset Button -->
+                <button id="resetBtn" onclick="resetSimulation()" class="fn-btn py-3 px-4 bg-rose-950/70 hover:bg-rose-900/80 border border-rose-500/40 text-rose-200 font-gaming text-base font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                    <span>🗑️ Reset</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Rechte Spalte: Live-Statistik-Dashboard & Verlauf -->
+        <aside class="lg:col-span-5 flex flex-col gap-5">
+            
+            <!-- Live-Statistik-Dashboard -->
+            <div class="glass-card rounded-2xl p-5 sm:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-gaming text-xl font-bold uppercase tracking-wide text-cyan-300 flex items-center gap-2">
+                        <span>📊 Live-Statistiken</span>
+                    </h2>
+                    <span class="text-xs text-slate-400 font-mono">RNG: Kryptografisch / Float64</span>
+                </div>
+
+                <!-- 2x2 Statistik-Grid -->
+                <div class="grid grid-cols-2 gap-3.5">
+                    <!-- Geöffnete Truhen -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/85 border border-slate-700/70">
+                        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Geöffnete Truhen</div>
+                        <div id="statOpened" class="font-gaming text-2xl sm:text-3xl font-bold text-white mt-1">0</div>
+                    </div>
+
+                    <!-- Gefundene Tokens -->
+                    <div id="tokenStatCard" class="p-3.5 rounded-xl bg-slate-900/85 border border-amber-500/30 transition-all duration-300">
+                        <div class="text-xs font-semibold uppercase tracking-wider text-amber-300/90">Gefundene Tokens</div>
+                        <div id="statTokens" class="font-gaming text-2xl sm:text-3xl font-bold text-amber-400 mt-1">0</div>
+                    </div>
+
+                    <!-- Exakte Wahrscheinlichkeit -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/85 border border-slate-700/70">
+                        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Drop-Chance</div>
+                        <div class="font-gaming text-lg sm:text-xl font-bold text-cyan-300 mt-1">1 : 137.500</div>
+                        <div class="text-[11px] font-mono text-slate-400 mt-0.5">0,00072727 %</div>
+                    </div>
+
+                    <!-- Kumulierte Chance -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/85 border border-slate-700/70">
+                        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kumulierte Chance</div>
+                        <div id="statCumulative" class="font-gaming text-lg sm:text-xl font-bold text-emerald-400 mt-1">0,0000 %</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">Mind. 1 Token bisher</div>
+                    </div>
+                </div>
+
+                <!-- Fortschrittsbalken relativ zum statistischen Erwartungswert (137.500) -->
+                <div class="mt-4 pt-4 border-t border-slate-800">
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-400">Fortschritt zum Erwartungswert (137.500)</span>
+                        <span id="statExpectedPct" class="font-mono font-semibold text-cyan-300">0,0 %</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                        <div id="expectedProgressBar" class="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-amber-400 transition-all duration-200" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verlauf der letzten Ziehungen -->
+            <div class="glass-card rounded-2xl p-5 sm:p-6 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-gaming text-lg font-bold uppercase tracking-wide text-slate-200">
+                        📜 Letzte Ziehungen
+                    </h2>
+                    <span class="text-xs text-slate-400">Neueste oben</span>
+                </div>
+
+                <div id="historyList" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    <div class="text-sm text-slate-500 text-center py-8 italic">
+                        Noch keine Truhen geöffnet. Starte jetzt deine erste Ziehung!
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+    </main>
+
+    <!-- Jackpot / Mythischer Token Overlay Modal (erscheint bei 1:137.500 Treffer!) -->
+    <div id="jackpotModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="max-w-md w-full rounded-3xl p-1 mythic-gradient shadow-[0_0_60px_rgba(251,191,36,0.65)] transform transition-all scale-100">
+            <div class="bg-slate-950 rounded-[22px] p-6 sm:p-8 text-center relative overflow-hidden">
+                <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold uppercase tracking-widest mb-3">
+                    ★ 1 zu 137.500 Treffer ★
+                </div>
+                
+                <!-- Mythischer Token Grafik -->
+                <div class="w-24 h-24 mx-auto my-3 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-300 to-amber-500 p-1 shadow-[0_0_35px_rgba(250,204,21,0.8)] flex items-center justify-center animate-bounce">
+                    <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center border-2 border-yellow-200">
+                        <span class="text-5xl">👑</span>
+                    </div>
+                </div>
+
+                <h2 class="font-gaming text-3xl sm:text-4xl font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-amber-400 to-yellow-200 mt-2">
+                    Mythischer Token!
+                </h2>
+                <p id="jackpotModalText" class="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+                    Unglaublich! Du hast den extrem seltenen Sieges-Token nach <strong class="text-amber-300">0</strong> Truhen gezogen!
+                </p>
+
+                <button onclick="closeJackpotModal()" class="mt-6 w-full fn-btn py-3.5 px-6 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-gaming text-lg font-bold uppercase tracking-wider cursor-pointer">
+                    Weiter spielen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl w-full mx-auto pt-4 border-t border-slate-800/80 text-center sm:flex sm:items-center sm:justify-between text-xs text-slate-500">
+        <p>Exakte Wahrscheinlichkeit: <span class="text-slate-400 font-mono">p = 1 / 137.500 ≈ 0,0000072727</span></p>
+        <p class="mt-1 sm:mt-0">Tipp: Nutze <span class="text-purple-400 font-semibold">Auto-Open bis Token</span> für die Hochgeschwindigkeits-Simulation.</p>
+    </footer>
+
+    <script>
+        /**
+         * ============================================================================
+         * FORTNITE SCHATZTRUHEN-SIMULATOR (1 : 137.500)
+         * ============================================================================
+         */
+
+        // Exakte Ziel-Wahrscheinlichkeit: 1 zu 137.500
+        const ODDS_DENOMINATOR = 137500;
+        const DROP_PROBABILITY = 1 / ODDS_DENOMINATOR;
+
+        // Simulations-Zustand
+        let state = {
+            openedCount: 0,
+            tokensFound: 0,
+            history: [], // Speichert die letzten 25 Einträge
+            autoOpenRunning: false,
+            autoOpenTimer: null,
+            soundEnabled: true
+        };
+
+        // Gewöhnlicher Fortnite-Loot für realistische Nieten-Ziehungen
+        const COMMON_LOOT_POOL = [
+            { name: "Kleiner Schildtrank (2x)", rarity: "Gewöhnlich", icon: "🧪", color: "text-slate-300", border: "border-slate-600/60" },
+            { name: "Graues Sturmgewehr", rarity: "Gewöhnlich", icon: "🔫", color: "text-slate-300", border: "border-slate-600/60" },
+            { name: "Verbände (5x) & Holz", rarity: "Gewöhnlich", icon: "🩹", color: "text-slate-300", border: "border-slate-600/60" },
+            { name: "Grüne Taktische Schrotflinte", rarity: "Ungewöhnlich", icon: "💥", color: "text-emerald-400", border: "border-emerald-500/40" },
+            { name: "Schildtrank (50 Schild)", rarity: "Selten", icon: "🛡️", color: "text-sky-400", border: "border-sky-500/40" },
+            { name: "Impulse-Granaten (3x)", rarity: "Selten", icon: "💣", color: "text-sky-400", border: "border-sky-500/40" },
+            { name: "Epische SCAR", rarity: "Episch", icon: "⚡", color: "text-purple-400", border: "border-purple-500/40" },
+            { name: "Schlürfsaft", rarity: "Episch", icon: "🧃", color: "text-purple-400", border: "border-purple-500/40" }
+        ];
+
+        const MYTHIC_TOKEN = {
+            name: "MYTHISCHER SIEGES-TOKEN (1:137.500)",
+            rarity: "MYTHISCH",
+            icon: "👑",
+            color: "text-amber-300",
+            border: "border-amber-400"
+        };
+
+        /**
+         * Kryptografisch sauberer Zufallsgenerator für exakte 1 : 137.500 Wahrscheinlichkeit.
+         * Nutzt window.crypto.getRandomValues für unverzerrte Gleichverteilung.
+         */
+        function rollSingleChest() {
+            if (window.crypto && window.crypto.getRandomValues) {
+                // Rejection Sampling auf 32-Bit Unsigned Int für 100% mathematisch exakte Modulo-Verteilung
+                const maxUint32 = 0xFFFFFFFF;
+                const limit = maxUint32 - (maxUint32 % ODDS_DENOMINATOR);
+                const array = new Uint32Array(1);
+                let randomValue;
+                do {
+                    window.crypto.getRandomValues(array);
+                    randomValue = array[0];
+                } while (randomValue >= limit);
+
+                return (randomValue % ODDS_DENOMINATOR) === 0;
+            }
+            // Fallback auf Math.random()
+            return Math.random() < DROP_PROBABILITY;
+        }
+
+        /**
+         * Wählt ein zufälliges reguläres Loot-Item für den Verlauf aus
+         */
+        function getRandomCommonLoot() {
+            const idx = Math.floor(Math.random() * COMMON_LOOT_POOL.length);
+            return COMMON_LOOT_POOL[idx];
+        }
+
+        /**
+         * Web-Audio Synthesizer (Tone.js) für Truhen-Sound & Jackpot-Fanfare
+         */
+        let chestSynth = null;
+        let jackpotSynth = null;
+
+        async function initAudio() {
+            if (!state.soundEnabled || typeof Tone === "undefined") return;
+            try {
+                if (Tone.context.state !== "running") {
+                    await Tone.start();
+                }
+                if (!chestSynth) {
+                    chestSynth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "triangle" },
+                        envelope: { attack: 0.01, decay: 0.15, sustain: 0.05, release: 0.2 }
+                    }).toDestination();
+                    chestSynth.volume.value = -10;
+                }
+                if (!jackpotSynth) {
+                    jackpotSynth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "sawtooth" },
+                        envelope: { attack: 0.02, decay: 0.3, sustain: 0.4, release: 0.8 }
+                    }).toDestination();
+                    jackpotSynth.volume.value = -6;
+                }
+            } catch (e) {
+                // Audio-Kontext blockiert, stillschweigend ignorieren
+            }
+        }
+
+        function playChestSound(isBulk = false) {
+            if (!state.soundEnabled) return;
+            initAudio().then(() => {
+                if (!chestSynth) return;
+                const now = Tone.now();
+                if (isBulk) {
+                    chestSynth.triggerAttackRelease(["C5", "G5"], "32n", now);
+                } else {
+                    chestSynth.triggerAttackRelease("E5", "16n", now);
+                    chestSynth.triggerAttackRelease("B5", "16n", now + 0.06);
+                }
+            });
+        }
+
+        function playJackpotFanfare() {
+            if (!state.soundEnabled) return;
+            initAudio().then(() => {
+                if (!jackpotSynth) return;
+                const now = Tone.now();
+                jackpotSynth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", now);
+                jackpotSynth.triggerAttackRelease(["D4", "F#4", "A4", "D5"], "8n", now + 0.18);
+                jackpotSynth.triggerAttackRelease(["E4", "G#4", "B4", "E5"], "8n", now + 0.36);
+                jackpotSynth.triggerAttackRelease(["G4", "B4", "D5", "G5"], "2n", now + 0.54);
+            });
+        }
+
+        function toggleSound() {
+            state.soundEnabled = !state.soundEnabled;
+            document.getElementById("soundIcon").textContent = state.soundEnabled ? "🔊" : "🔇";
+            document.getElementById("soundLabel").textContent = state.soundEnabled ? "Sound: An" : "Sound: Aus";
+            if (state.soundEnabled) initAudio();
+        }
+
+        /**
+         * Visuelle Animation der Truhe (Wackeln, Lichtstrahl, Deckel-Zucken, Partikel)
+         */
+        function triggerChestVisualEffect(isJackpot = false) {
+            const wrapper = document.getElementById("chestVisualWrapper");
+            const beam = document.getElementById("lightBeam");
+            const lid = document.getElementById("chestLidGroup");
+
+            // Animation neu starten
+            wrapper.classList.remove("chest-shake");
+            beam.classList.remove("light-beam-active");
+            void wrapper.offsetWidth; // Reflow erzwingen
+
+            wrapper.classList.add("chest-shake");
+            beam.classList.add("light-beam-active");
+
+            // Deckel springt kurz auf
+            lid.style.transform = "translateY(-14px) rotate(-3deg)";
+            setTimeout(() => {
+                lid.style.transform = "translateY(0px) rotate(0deg)";
+            }, 240);
+
+            // Partikel spawnen
+            const chestRect = document.getElementById("chestButton").getBoundingClientRect();
+            const originX = chestRect.left + chestRect.width / 2;
+            const originY = chestRect.top + chestRect.height / 2;
+            spawnParticles(originX, originY, isJackpot ? 140 : 22, isJackpot);
+        }
+
+        /**
+         * Einzelne Truhe öffnen (1x)
+         */
+        function handleSingleOpen() {
+            if (state.autoOpenRunning) {
+                stopAutoOpen();
+                return;
+            }
+
+            state.openedCount += 1;
+            const wonToken = rollSingleChest();
+
+            if (wonToken) {
+                state.tokensFound += 1;
+                addHistoryEntry(state.openedCount, MYTHIC_TOKEN, true);
+                updateLastResultBanner(state.openedCount, MYTHIC_TOKEN, true);
+                triggerChestVisualEffect(true);
+                playJackpotFanfare();
+                showJackpotModal(state.openedCount);
+            } else {
+                const loot = getRandomCommonLoot();
+                addHistoryEntry(state.openedCount, loot, false);
+                updateLastResultBanner(state.openedCount, loot, false);
+                triggerChestVisualEffect(false);
+                playChestSound(false);
+            }
+
+            updateStatsUI();
+        }
+
+        /**
+         * Mehrfach-Ziehung (z. B. 100x oder 1.000x)
+         */
+        function handleBulkOpen(count) {
+            if (state.autoOpenRunning) return;
+
+            let tokensInBatch = 0;
+            let winningDrawNumber = null;
+            let lastLoot = null;
+
+            for (let i = 0; i < count; i++) {
+                state.openedCount += 1;
+                if (rollSingleChest()) {
+                    state.tokensFound += 1;
+                    tokensInBatch += 1;
+                    winningDrawNumber = state.openedCount;
+                    addHistoryEntry(state.openedCount, MYTHIC_TOKEN, true);
+                } else if (i === count - 1) {
+                    lastLoot = getRandomCommonLoot();
+                }
+            }
+
+            if (tokensInBatch > 0) {
+                updateLastResultBanner(winningDrawNumber, MYTHIC_TOKEN, true);
+                triggerChestVisualEffect(true);
+                playJackpotFanfare();
+                showJackpotModal(winningDrawNumber);
+            } else {
+                addHistoryEntry(state.openedCount, lastLoot, false, count);
+                updateLastResultBanner(state.openedCount, lastLoot, false, count);
+                triggerChestVisualEffect(false);
+                playChestSound(true);
+            }
+
+            updateStatsUI();
+        }
+
+        /**
+         * Auto-Open Modus: Öffnet Truhen im Hochgeschwindigkeits-Takt,
+         * bis ein Token gefunden wird oder der Nutzer auf Stopp drückt.
+         */
+        function toggleAutoOpen() {
+            if (state.autoOpenRunning) {
+                stopAutoOpen();
+            } else {
+                startAutoOpen();
+            }
+        }
+
+        function startAutoOpen() {
+            state.autoOpenRunning = true;
+            initAudio();
+
+            // UI für laufenden Auto-Open anpassen
+            const btn = document.getElementById("autoOpenBtn");
+            btn.classList.remove("from-purple-600", "to-indigo-600", "hover:from-purple-500", "hover:to-indigo-500");
+            btn.classList.add("from-rose-600", "to-red-600", "hover:from-rose-500", "hover:to-red-500");
+            document.getElementById("autoOpenBtnIcon").textContent = "⏹️";
+            document.getElementById("autoOpenBtnText").textContent = "Auto-Open STOPPEN";
+            document.getElementById("autoStatusBadge").classList.remove("hidden");
+
+            document.getElementById("open100Btn").disabled = true;
+            document.getElementById("open1000Btn").disabled = true;
+
+            // Simuliert 250 Truhen pro Frame (~15.000 Truhen/Sekunde), damit 1:137.500 in ca. 5-15 Sek. erlebbar ist
+            const BATCH_PER_TICK = 250;
+
+            function autoTick() {
+                if (!state.autoOpenRunning) return;
+
+                let found = false;
+                let lastLoot = null;
+
+                for (let i = 0; i < BATCH_PER_TICK; i++) {
+                    state.openedCount += 1;
+                    if (rollSingleChest()) {
+                        state.tokensFound += 1;
+                        found = true;
+                        addHistoryEntry(state.openedCount, MYTHIC_TOKEN, true);
+                        updateLastResultBanner(state.openedCount, MYTHIC_TOKEN, true);
+                        updateStatsUI();
+                        stopAutoOpen();
+                        triggerChestVisualEffect(true);
+                        playJackpotFanfare();
+                        showJackpotModal(state.openedCount);
+                        return;
+                    }
+                    if (i === BATCH_PER_TICK - 1) {
+                        lastLoot = getRandomCommonLoot();
+                    }
+                }
+
+                if (!found) {
+                    updateLastResultBanner(state.openedCount, lastLoot, false, BATCH_PER_TICK);
+                    updateStatsUI();
+
+                    // Alle paar Ticks sanftes Wackeln & Partikel
+                    if (state.openedCount % (BATCH_PER_TICK * 8) === 0) {
+                        triggerChestVisualEffect(false);
+                        playChestSound(true);
+                    }
+
+                    state.autoOpenTimer = requestAnimationFrame(autoTick);
+                }
+            }
+
+            state.autoOpenTimer = requestAnimationFrame(autoTick);
+        }
+
+        function stopAutoOpen() {
+            state.autoOpenRunning = false;
+            if (state.autoOpenTimer) {
+                cancelAnimationFrame(state.autoOpenTimer);
+                state.autoOpenTimer = null;
+            }
+
+            const btn = document.getElementById("autoOpenBtn");
+            btn.classList.remove("from-rose-600", "to-red-600", "hover:from-rose-500", "hover:to-red-500");
+            btn.classList.add("from-purple-600", "to-indigo-600", "hover:from-purple-500", "hover:to-indigo-500");
+            document.getElementById("autoOpenBtnIcon").textContent = "🔄";
+            document.getElementById("autoOpenBtnText").textContent = "Auto-Open bis Token";
+            document.getElementById("autoStatusBadge").classList.add("hidden");
+
+            document.getElementById("open100Btn").disabled = false;
+            document.getElementById("open1000Btn").disabled = false;
+        }
+
+        /**
+         * Setzt die gesamte Simulation auf 0 zurück
+         */
+        function resetSimulation() {
+            if (state.autoOpenRunning) {
+                stopAutoOpen();
+            }
+            state.openedCount = 0;
+            state.tokensFound = 0;
+            state.history = [];
+
+            document.getElementById("lastResultIcon").textContent = "📦";
+            document.getElementById("lastResultRarity").textContent = "Bereit zum Öffnen";
+            document.getElementById("lastResultRarity").className = "text-[11px] font-bold uppercase tracking-wider text-slate-400";
+            document.getElementById("lastResultTitle").textContent = "Drücke auf die Schatztruhe!";
+            document.getElementById("lastResultTitle").className = "font-gaming text-base sm:text-lg font-bold text-slate-100";
+            document.getElementById("lastResultBadge").textContent = "Zug #0";
+            document.getElementById("lastResultBanner").className = "w-full mb-5 p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-between gap-3 transition-all duration-200";
+
+            renderHistory();
+            updateStatsUI();
+        }
+
+        /**
+         * Aktualisiert alle Live-Statistiken inkl. kumulierter Wahrscheinlichkeit:
+         * P(mindestens 1 Treffer bei n Versuchen) = 1 - (1 - 1/137500)^n
+         */
+        function updateStatsUI() {
+            const n = state.openedCount;
+            document.getElementById("statOpened").textContent = n.toLocaleString("de-DE");
+            document.getElementById("statTokens").textContent = state.tokensFound.toLocaleString("de-DE");
+
+            // Hervorhebung der Token-Karte, sobald mindestens 1 Token gefunden wurde
+            const tokenCard = document.getElementById("tokenStatCard");
+            if (state.tokensFound > 0) {
+                tokenCard.classList.add("bg-amber-950/40", "border-amber-400", "shadow-[0_0_20px_rgba(251,191,36,0.25)]");
+            } else {
+                tokenCard.classList.remove("bg-amber-950/40", "border-amber-400", "shadow-[0_0_20px_rgba(251,191,36,0.25)]");
+            }
+
+            // Kumulierte Wahrscheinlichkeit exakt berechnen (numerisch stabil über expm1/log1p)
+            let cumulativeProb = 0;
+            if (n > 0) {
+                cumulativeProb = 1 - Math.exp(n * Math.log1p(-DROP_PROBABILITY));
+            }
+            const cumulativePercent = (cumulativeProb * 100).toLocaleString("de-DE", {
+                minimumFractionDigits: 4,
+                maximumFractionDigits: 4
+            });
+            document.getElementById("statCumulative").textContent = `${cumulativePercent} %`;
+
+            // Fortschritt relativ zum Erwartungswert (137.500)
+            const expectedRatio = (n / ODDS_DENOMINATOR) * 100;
+            document.getElementById("statExpectedPct").textContent = `${expectedRatio.toLocaleString("de-DE", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+            })} %`;
+            document.getElementById("expectedProgressBar").style.width = `${Math.min(100, expectedRatio)}%`;
+        }
+
+        /**
+         * Aktualisiert die Anzeige direkt unter der Schatztruhe
+         */
+        function updateLastResultBanner(drawNumber, item, isMythic, batchSize = 1) {
+            const banner = document.getElementById("lastResultBanner");
+            const iconEl = document.getElementById("lastResultIcon");
+            const rarityEl = document.getElementById("lastResultRarity");
+            const titleEl = document.getElementById("lastResultTitle");
+            const badgeEl = document.getElementById("lastResultBadge");
+
+            iconEl.textContent = item.icon;
+            rarityEl.textContent = batchSize > 1 && !isMythic
+                ? `${item.rarity} (Letzter aus ${batchSize.toLocaleString("de-DE")}x Batch)`
+                : item.rarity;
+            rarityEl.className = `text-[11px] font-bold uppercase tracking-wider ${item.color}`;
+            titleEl.textContent = item.name;
+            badgeEl.textContent = `Zug #${drawNumber.toLocaleString("de-DE")}`;
+
+            if (isMythic) {
+                banner.className = "w-full mb-5 p-3.5 rounded-xl bg-amber-950/70 border-2 border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.4)] flex items-center justify-between gap-3 transition-all duration-200";
+                titleEl.className = "font-gaming text-base sm:text-lg font-bold text-amber-300";
+            } else {
+                banner.className = "w-full mb-5 p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-between gap-3 transition-all duration-200";
+                titleEl.className = "font-gaming text-base sm:text-lg font-bold text-slate-100";
+            }
+        }
+
+        /**
+         * Fügt einen Eintrag zur Historie hinzu und rendert die Liste neu
+         */
+        function addHistoryEntry(drawNumber, item, isMythic, batchSize = 1) {
+            state.history.unshift({
+                drawNumber,
+                item,
+                isMythic,
+                batchSize
+            });
+            if (state.history.length > 25) {
+                state.history.pop();
+            }
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const container = document.getElementById("historyList");
+            if (state.history.length === 0) {
+                container.innerHTML = `
+                    <div class="text-sm text-slate-500 text-center py-8 italic">
+                        Noch keine Truhen geöffnet. Starte jetzt deine erste Ziehung!
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.history.map(entry => {
+                const bgClass = entry.isMythic
+                    ? "bg-gradient-to-r from-amber-950/90 to-yellow-900/50 border-amber-400 shadow-md shadow-amber-500/20"
+                    : `bg-slate-900/75 ${entry.item.border}`;
+
+                const batchTag = entry.batchSize > 1 && !entry.isMythic
+                    ? `<span class="text-[10px] text-slate-400 ml-1">(+${(entry.batchSize - 1).toLocaleString("de-DE")} weitere)</span>`
+                    : "";
+
+                return `
+                    <div class="p-2.5 rounded-xl border ${bgClass} flex items-center justify-between gap-2 text-sm">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="text-lg shrink-0">${entry.item.icon}</span>
+                            <div class="truncate">
+                                <div class="font-semibold ${entry.item.color} truncate">
+                                    ${entry.item.name}${batchTag}
+                                </div>
+                                <div class="text-[10px] uppercase tracking-wider text-slate-400">
+                                    ${entry.item.rarity}
+                                </div>
+                            </div>
+                        </div>
+                        <span class="font-mono text-xs text-slate-400 shrink-0">
+                            #${entry.drawNumber.toLocaleString("de-DE")}
+                        </span>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        /**
+         * Jackpot Modal Steuerung
+         */
+        function showJackpotModal(drawNumber) {
+            const modal = document.getElementById("jackpotModal");
+            const text = document.getElementById("jackpotModalText");
+            text.innerHTML = `Unglaublich! Du hast den extrem seltenen <strong class="text-amber-300">Mythischen Sieges-Token</strong> (1 : 137.500) bei Ziehung <strong class="text-cyan-300">#${drawNumber.toLocaleString("de-DE")}</strong> erhalten!`;
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeJackpotModal() {
+            const modal = document.getElementById("jackpotModal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        /**
+         * ============================================================================
+         * PARTIKEL-ENGINE FÜR VISUELLE EFFEKTE (FUNKEN & MYTHISCHES KONFETTI)
+         * ============================================================================
+         */
+        const canvas = document.getElementById("particleCanvas");
+        const ctx = canvas.getContext("2d");
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        function spawnParticles(x, y, count, isJackpot) {
+            const colors = isJackpot
+                ? ["#FFD700", "#FEF08A", "#00F0FF", "#F59E0B", "#FFFFFF", "#A855F7"]
+                : ["#FBBF24", "#FEF08A", "#38BDF8", "#F59E0B"];
+
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = isJackpot
+                    ? 3 + Math.random() * 11
+                    : 2 + Math.random() * 6;
+
+                particles.push({
+                    x,
+                    y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - (isJackpot ? 3 : 1.5),
+                    size: isJackpot ? 4 + Math.random() * 5 : 2.5 + Math.random() * 3.5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    decay: isJackpot ? 0.012 + Math.random() * 0.01 : 0.025 + Math.random() * 0.02,
+                    gravity: 0.18
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += p.gravity;
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        /**
+         * ============================================================================
+         * EIGENSTÄNDIGE HTML-DATEI HERUNTERLADEN
+         * ============================================================================
+         */
+        function downloadStandaloneHTML() {
+            // Aktuellen HTML-Quelltext als sauberes Dokument serialisieren
+            const doctype = "<!DOCTYPE html>\n";
+            const htmlContent = doctype + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "fortnite_chest_1_zu_137500_simulator.html";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Start der Partikel-Schleife nach vollständigem Laden
+        window.onload = function () {
+            animateParticles();
+            updateStatsUI();
+        };
+    </script>
+</body>
+</html>
